@@ -248,7 +248,7 @@ persistence:
     enabled: false
     # existingClaim: nil
     Size: 1Gi
-  
+
   mapsDir:
     enabled: false
     Size: 1Gi
