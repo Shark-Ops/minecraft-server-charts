@@ -220,35 +220,35 @@ spec:
         {{- range .Values.extraVolumes }}
         {{- toYaml .volumeMounts | nindent 8 }}
         {{- end }}
-      {{- if .Values.overviewer.enabled }}
+      {{- if .Values.minecraftServer.overviewer.enabled }}
       - name: overviewer-cron
-        image: "{{ .Values.overviewer.image }}:{{ .Values.overviewer.imageTag }}"
+        image: "{{ .Values.minecraftServer.overviewer.image }}:{{ .Values.minecraftServer.overviewer.imageTag }}"
         imagePullPolicy: Always
         resources:
-{{ toYaml .Values.overviewer.resources | indent 10 }}
+{{ toYaml .Values.minecraftServer.overviewer.resources | indent 10 }}
         env:
           - name: VERSION
             value: {{ .Values.minecraftServer.version | quote }}
           - name: LEVEL
             value: {{ .Values.minecraftServer.worldSaveName | quote }}
           - name: OVERVIEWER_CRON
-            value: {{ .Values.overviewer.cron | quote }}
+            value: {{ .Values.minecraftServer.overviewer.cron | quote }}
         volumeMounts:
         - name: datadir
           mountPath: /data
         - name: mapsdir
           mountPath: /maps
       - name: overviewer-web
-        image: "{{ .Values.overviewer.web.image }}:{{ .Values.overviewer.web.imageTag }}"
+        image: "{{ .Values.minecraftServer.overviewer.web.image }}:{{ .Values.minecraftServer.overviewer.web.imageTag }}"
         imagePullPolicy: Always
         resources:
-{{ toYaml .Values.overviewer.web.resources | indent 10 }}
+{{ toYaml .Values.minecraftServer.overviewer.web.resources | indent 10 }}
         volumeMounts:
         - name: mapsdir
           mountPath: /user/share/nginx/html
         ports:
         - name: http
-          containerPort: {{ .Values.overviewer.web.port }}
+          containerPort: {{ .Values.minecraftServer.overviewer.web.port }}
           protocol: TCP
       {{- end }}
       volumes:
