@@ -209,19 +209,22 @@ minecraftServer:
 
   overviewer:
     enabled: false
-    cron: 0 */6 * * *
+    cron:
+     expression: 0 */6 * * *
+     runAsUser: 0
     image: registry.gitlab.com/sharkops/minecraft-tools/overviewer-cron-docker
     imageTag: master
     resources:
-      requests:
+      limits:
         memory: 512Mi
-        cpu: 500m
+        cpu: 1000m
     web:
-      port: 80
-      image: nginx
+      port: 8080
+      runAsUser: 1000
+      image: nginxinc/nginx-unprivileged
       imageTag: latest
       resources:
-        requests:
+        limits:
           memory: 32Mi
           cpu: 125m
 

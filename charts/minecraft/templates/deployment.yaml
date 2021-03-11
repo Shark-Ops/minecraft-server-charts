@@ -224,6 +224,8 @@ spec:
       - name: overviewer-cron
         image: "{{ .Values.minecraftServer.overviewer.image }}:{{ .Values.minecraftServer.overviewer.imageTag }}"
         imagePullPolicy: Always
+        securityContext:
+          runAsUser: {{ .Values.minecraftServer.overviewer.cron.runAsUser }}
         resources:
 {{ toYaml .Values.minecraftServer.overviewer.resources | indent 10 }}
         env:
@@ -232,7 +234,7 @@ spec:
           - name: LEVEL
             value: {{ .Values.minecraftServer.worldSaveName | quote }}
           - name: OVERVIEWER_CRON
-            value: {{ .Values.minecraftServer.overviewer.cron | quote }}
+            value: {{ .Values.minecraftServer.overviewer.cron.expression | quote }}
         volumeMounts:
         - name: datadir
           mountPath: /data
@@ -241,11 +243,13 @@ spec:
       - name: overviewer-web
         image: "{{ .Values.minecraftServer.overviewer.web.image }}:{{ .Values.minecraftServer.overviewer.web.imageTag }}"
         imagePullPolicy: Always
+        securityContext:
+          runAsUser: {{ .Values.minecraftServer.overviewer.web.runAsUser }}
         resources:
 {{ toYaml .Values.minecraftServer.overviewer.web.resources | indent 10 }}
         volumeMounts:
         - name: mapsdir
-          mountPath: /user/share/nginx/html
+          mountPath: /usr/share/nginx/html
         ports:
         - name: http
           containerPort: {{ .Values.minecraftServer.overviewer.web.port }}
