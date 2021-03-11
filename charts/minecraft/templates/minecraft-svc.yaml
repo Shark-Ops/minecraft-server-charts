@@ -37,8 +37,9 @@ spec:
     protocol: TCP
   {{- if eq .Values.minecraftServer.serviceType "LoadBalancer" }}
   - name: http
-    port: {{ .Values.minecraftServer.overviewer.port }}
+    port: {{ .Values.minecraftServer.overviewer.web.port }}
     targetPort: http
+    protocol: TCP
   {{- end }}
   selector:
     app: {{ template "minecraft.fullname" . }}
