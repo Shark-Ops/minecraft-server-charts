@@ -210,8 +210,8 @@ minecraftServer:
   overviewer:
     enabled: false
     cron:
-     expression: 0 */6 * * *
-     runAsUser: 0
+      expression: 0 */6 * * *
+      runAsUser: 0
     image: registry.gitlab.com/sharkops/minecraft-tools/overviewer-cron-docker
     imageTag: master
     resources:
