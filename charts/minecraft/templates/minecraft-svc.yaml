@@ -35,6 +35,11 @@ spec:
     nodePort: {{ .Values.minecraftServer.nodePort }}
     {{- end }}
     protocol: TCP
+  {{- if eq .Values.minecraftServer.serviceType "LoadBalancer" }}
+  - name: http
+    port: {{ .Values.overviewer.port }}
+    targetPort: http
+  {{- end }}
   selector:
     app: {{ template "minecraft.fullname" . }}
   {{- if .Values.minecraftServer.externalIPs }}

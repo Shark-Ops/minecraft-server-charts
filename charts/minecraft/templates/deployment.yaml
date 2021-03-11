@@ -220,6 +220,37 @@ spec:
         {{- range .Values.extraVolumes }}
         {{- toYaml .volumeMounts | nindent 8 }}
         {{- end }}
+      {{- if .Values.overviewer.enabled }}
+      - name: overviewer-cron
+        image: "{{ .Values.overviewer.image }}:{{ .Values.overviewer.imageTag }}"
+        imagePullPolicy: Always
+        resources:
+{{ toYaml .Values.overviewer.resources | indent 10 }}
+        env:
+          - name: VERSION
+            value: {{ .Values.minecraftServer.version | quote }}
+          - name: LEVEL
+            value: {{ .Values.minecraftServer.worldSaveName | quote }}
+          - name: OVERVIEWER_CRON
+            value: {{ .Values.overviewer.cron | quote }}
+        volumeMounts:
+        - name: datadir
+          mountPath: /data
+        - name: mapsdir
+          mountPath: /maps
+      - name: overviewer-web
+        image: "{{ .Values.overviewer.web.image }}:{{ .Values.overviewer.web.imageTag }}"
+        imagePullPolicy: Always
+        resources:
+{{ toYaml .Values.overviewer.web.resources | indent 10 }}
+        volumeMounts:
+        - name: mapsdir
+          mountPath: /user/share/nginx/html
+        ports:
+        - name: http
+          containerPort: {{ .Values.overviewer.web.port }}
+          protocol: TCP
+      {{- end }}
       volumes:
       - name: datadir
       {{- if .Values.persistence.dataDir.enabled }}
@@ -228,6 +259,17 @@ spec:
           claimName: {{ .Values.persistence.dataDir.existingClaim }}
         {{- else }}
           claimName: {{ template "minecraft.fullname" . }}-datadir
+        {{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+      - name: mapsdir
+      {{- if .Values.persistence.mapsDir.enabled }}
+        persistentVolumeClaim:
+        {{- if .Values.persistence.mapsDir.existingClaim }}
+          claimName: {{ .Values.persistence.mapsDir.existingClaim }}
+        {{- else }}
+          claimName: {{ template "minecraft.fullname" . }}-mapsdir
         {{- end }}
       {{- else }}
         emptyDir: {}

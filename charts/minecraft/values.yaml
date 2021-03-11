@@ -207,6 +207,24 @@ minecraftServer:
       #    hosts:
       #      - dynmap.local
 
+  overviewer:
+    enabled: false
+    cron: 0 */6 * * *
+    image: registry.gitlab.com/sharkops/minecraft-tools/overviewer-cron-docker
+    imageTag: master
+    resources:
+      requests:
+        memory: 512Mi
+        cpu: 500m
+    web:
+      port: 80
+      image: nginx
+      imageTag: latest
+      resources:
+        requests:
+          memory: 32Mi
+          cpu: 125m
+
   query:
     # If you enable this, your server will be "published" to Gamespy
     enabled: false
@@ -229,6 +247,10 @@ persistence:
     # Set this to false if you don't care to persist state between restarts.
     enabled: false
     # existingClaim: nil
+    Size: 1Gi
+  
+  mapsDir:
+    enabled: false
     Size: 1Gi
 
 podAnnotations: {}
